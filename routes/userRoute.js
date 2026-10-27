@@ -7,12 +7,12 @@ const { verifyToken, authorizeRoles } = require("../middleware/authMiddleware");
 router.post("/users/register", userController.register);
 router.post("/users/login", userController.login);
 router.post("/users", userController.register); // Alias for backwards compatibility
-router.post("/users/logout", userController.logout);
 router.post("/users/forgot-password", userController.forgotPassword);
 router.post("/users/reset-password", userController.resetPassword);
 
 // Protected User Endpoints
 router.get("/users/me", verifyToken, userController.getMe);
+router.patch("/users/theme", verifyToken, userController.updateTheme);
 
 // Management Endpoints
 router.get("/users", verifyToken, authorizeRoles("super_admin"), userController.getAllUsers);

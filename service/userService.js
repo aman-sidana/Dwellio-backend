@@ -201,6 +201,22 @@ const resetPasswordWithOtp = async ({ email, otp, newPassword, confirmPassword }
   };
 };
 
+const updateUserTheme = async (userId, theme) => {
+  if (!["light", "dark"].includes(theme)) {
+    throw new Error("Theme must be either 'light' or 'dark'.");
+  }
+  const user = await userRepository.findUserById(userId);
+  if (!user) {
+    throw new Error("User not found.");
+  }
+  user.theme = theme;
+  await user.save();
+
+  const userJson = user.toJSON();
+  delete userJson.password;
+  return userJson;
+};
+
 module.exports = {
   registerUser,
   loginUser,
@@ -210,4 +226,5 @@ module.exports = {
   deleteUser,
   sendForgotPasswordOtp,
   resetPasswordWithOtp,
+  updateUserTheme,
 };

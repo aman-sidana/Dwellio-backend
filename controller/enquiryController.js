@@ -1,3 +1,4 @@
+const jwt = require("jsonwebtoken");
 const enquiryService = require("../service/enquiryService");
 
 const createEnquiry = async (req, res) => {
@@ -11,7 +12,20 @@ const createEnquiry = async (req, res) => {
       });
     }
 
-    const enquiry = await enquiryService.createEnquiry(req.body);
+    // Attach buyer userId if logged in
+    let userId = req.body.userId || null;
+    if (!userId && req.headers.authorization && req.headers.authorization.startsWith("Bearer ")) {
+      try {
+        const token = req.headers.authorization.split(" ")[1];
+        const decoded = jwt.verify(
+          token,
+          process.env.JWT_SECRET || "Dwellio_jwt_secret_super_secure_key_2026"
+        );
+        userId = decoded.userId;
+      } catch (e) {}
+    }
+
+    const enquiry = await enquiryService.createEnquiry({ ...req.body, userId });
 
     return res.status(201).json({
       success: true,

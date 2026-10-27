@@ -45,9 +45,13 @@ const findProperties = async (filters = {}) => {
     sortOrder = "DESC",
   } = filters;
 
-  const where = {
-    status: "available",
-  };
+  const where = {};
+
+  if (filters.status && filters.status !== "all") {
+    where.status = filters.status;
+  } else if (!filters.status && !filters.allStatuses) {
+    where.status = "available";
+  }
 
   if (filters.userId) {
     where.userId = parseInt(filters.userId, 10);

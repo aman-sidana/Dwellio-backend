@@ -83,21 +83,6 @@ const getMe = async (req, res) => {
   }
 };
 
-// POST /api/users/logout
-const logout = async (req, res) => {
-  try {
-    return res.status(200).json({
-      success: true,
-      message: "Logged out successfully.",
-    });
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-};
-
 // GET /api/users (Admin / Management)
 const getAllUsers = async (req, res) => {
   try {
@@ -225,15 +210,40 @@ const resetPassword = async (req, res) => {
   }
 };
 
+// PATCH /api/users/theme
+const updateTheme = async (req, res) => {
+  try {
+    const { theme } = req.body;
+    if (!theme || !["light", "dark"].includes(theme)) {
+      return res.status(400).json({
+        success: false,
+        message: "Theme must be either 'light' or 'dark'.",
+      });
+    }
+
+    const updatedUser = await userService.updateUserTheme(req.user.userId, theme);
+    return res.status(200).json({
+      success: true,
+      message: `Theme updated to ${theme}`,
+      data: updatedUser,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   register,
   login,
   getMe,
-  logout,
   getAllUsers,
   getUserById,
   updateUser,
   deleteUser,
   forgotPassword,
   resetPassword,
+  updateTheme,
 };
