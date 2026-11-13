@@ -12,6 +12,7 @@ const enquiryRoutes = require("./routes/enquiryRoute");
 const favoriteRoutes = require("./routes/favoriteRoute");
 const adminRoutes = require("./routes/adminRoute");
 const uploadRoutes = require("./routes/uploadRoute");
+const aiRoutes = require("./routes/aiRoute");
 
 const app = express();
 
@@ -49,6 +50,8 @@ app.use("/api", propertyRoutes);
 app.use("/api", enquiryRoutes);
 app.use("/api", favoriteRoutes);
 app.use("/api", uploadRoutes);
+app.use("/api", aiRoutes);
+app.use("/api/ai", aiRoutes);
 app.use("/api/admin", adminRoutes);
 
 // Centralized error handling
