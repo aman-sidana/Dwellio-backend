@@ -49,8 +49,13 @@ Writing Guidelines:
 4. Output Format: Return ONLY clean text without meta-introductions like "Here is your description". Do NOT include placeholders like "[Your Phone Number]".
 `;
 
-  // Try reliable models in order of availability
-  const modelsToTry = ["gemini-3.5-flash", "gemini-flash-latest", "gemini-3.8-flash"];
+  // Try reliable models in order of availability and low latency
+  const modelsToTry = [
+    "gemini-3.5-flash-lite",
+    "gemini-3.6-flash",
+    "gemini-3.5-flash",
+    "gemini-3.8-flash",
+  ];
   let lastError = null;
 
   for (const modelName of modelsToTry) {
@@ -59,7 +64,9 @@ Writing Guidelines:
       const result = await model.generateContent(prompt);
       const response = await result.response;
       const description = response.text().trim();
-      return { description };
+      if (description) {
+        return { description };
+      }
     } catch (err) {
       lastError = err;
       // continue to next model on fallback

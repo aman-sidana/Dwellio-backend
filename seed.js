@@ -1,4 +1,5 @@
 require("dotenv").config();
+const bcrypt = require("bcryptjs");
 const sequelize = require("./db/db");
 const { User, Property, PropertyImage, Amenity } = require("./model");
 
@@ -21,21 +22,21 @@ const usersData = [
     email: "aman.owner@dwellio.com",
     password: "Password@123",
     phone: "+91 98765 43210",
-    role: "seller",
+    role: "owner",
   },
   {
     name: "Priya Nair (Prestige Realtors)",
     email: "priya.agent@dwellio.com",
     password: "Password@123",
     phone: "+91 98112 34567",
-    role: "agent",
+    role: "broker",
   },
   {
     name: "Rahul Verma",
     email: "rahul.buyer@gmail.com",
     password: "Password@123",
     phone: "+91 99887 76655",
-    role: "buyer",
+    role: "user",
   },
 ];
 
@@ -233,9 +234,10 @@ async function seedDatabase() {
     // Seed Users
     const users = [];
     for (const u of usersData) {
+      const hashedPassword = await bcrypt.hash(u.password, 10);
       const [user] = await User.findOrCreate({
         where: { email: u.email },
-        defaults: u,
+        defaults: { ...u, password: hashedPassword },
       });
       users.push(user);
     }
