@@ -9,5 +9,6 @@ router.get("/favorites/user/:userId", verifyToken, favoriteController.getUserFav
 
 // Public favorite status check
 router.get("/favorites/check", favoriteController.checkStatus);
+router.get("/favorites/owner/:userId", favoriteController.getOwnerFavoritesCount);
 
 module.exports = router;

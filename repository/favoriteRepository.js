@@ -1,4 +1,5 @@
 const { Favorite, Property, PropertyImage } = require("../model");
+const { Op } = require("sequelize");
 
 const addFavorite = async (userId, propertyId) => {
   const [favorite, created] = await Favorite.findOrCreate({
@@ -38,9 +39,22 @@ const isFavorite = async (userId, propertyId) => {
   return !!fav;
 };
 
+const countFavoritesByOwner = async (userId) => {
+  const userProps = await Property.findAll({
+    where: { userId },
+    attributes: ["propertyId"],
+  });
+  const propIds = userProps.map((p) => p.propertyId);
+  if (propIds.length === 0) return 0;
+  return await Favorite.count({
+    where: { propertyId: { [Op.in]: propIds } },
+  });
+};
+
 module.exports = {
   addFavorite,
   removeFavorite,
   findFavoritesByUser,
   isFavorite,
+  countFavoritesByOwner,
 };

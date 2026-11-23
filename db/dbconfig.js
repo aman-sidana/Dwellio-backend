@@ -7,11 +7,11 @@ const isAivenOrCloud =
 
 const dialectOptions = isAivenOrCloud
   ? {
-      ssl: {
-        require: true,
-        rejectUnauthorized: false,
-      },
-    }
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
+    },
+  }
   : {};
 
 let sequelize;

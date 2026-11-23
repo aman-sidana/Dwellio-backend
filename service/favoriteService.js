@@ -32,8 +32,14 @@ const checkIsFavorite = async (userId, propertyId) => {
   return await favoriteRepository.isFavorite(userId, propertyId);
 };
 
+const getOwnerFavoritesCount = async (userId) => {
+  if (!userId) return 0;
+  return await favoriteRepository.countFavoritesByOwner(userId);
+};
+
 module.exports = {
   toggleFavorite,
   getUserFavorites,
   checkIsFavorite,
+  getOwnerFavoritesCount,
 };

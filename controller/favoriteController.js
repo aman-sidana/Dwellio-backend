@@ -103,8 +103,32 @@ const checkStatus = async (req, res) => {
   }
 };
 
+const getOwnerFavoritesCount = async (req, res) => {
+  try {
+    const userId = parseInt(req.params.userId, 10);
+    if (!userId || isNaN(userId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Valid userId is required",
+      });
+    }
+
+    const count = await favoriteService.getOwnerFavoritesCount(userId);
+    return res.status(200).json({
+      success: true,
+      data: { count },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   toggleFavorite,
   getUserFavorites,
   checkStatus,
+  getOwnerFavoritesCount,
 };
